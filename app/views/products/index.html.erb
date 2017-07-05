@@ -1,1 +1,30 @@
+<% @products.each do |product| %>
+  <div class="product-name">Name: <%= product.name %></div>
+  <div class="product-id">ID: <%= product.id %></div>
+  <div id="description<%= product.id %>">Description: <%= truncate product.description %></div>
+  <button class="js-more-info" data-id="<%= product.id %>">More Info</button><br><br>
+<% end %>
 
+<script type="text/javascript" charset="utf-8">
+  $(function() {
+    $(".js-more-info").on('click', function(){
+      var id = $(this).data("id")
+      $.get(`/products/${id}/description`, function(data) {
+        // asdasd
+        console.log(data);
+        $(`#description${id}`).text(data)
+      })
+
+      $.get(`/products/${id}/inventory`, function(data) {
+        if (data === "true") {
+          $(`#description${id}`).text("Available")
+        } else {
+          $(`#description${id}`).after("<div id='inventory' style='color:red'>Sold Out</div>")
+        }
+      })
+    })
+  })
+</script>
+
+
+<%= link_to("Create New", new_product_path)%>
